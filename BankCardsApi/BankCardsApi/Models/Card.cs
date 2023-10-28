@@ -6,7 +6,7 @@ namespace BankCardsApi.Models
   {
     public int Id { get; set; }
     public required string Number { get; set; }
-    public required int CVV { get; set; }
+    public required string CVV { get; set; }
     public required DateTime ExpirationDate { get; set; }
     public required string OwnerFirstName { get; set; }
     public required string OwnerLastName { get; set; }
