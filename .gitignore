@@ -1,0 +1,20 @@
+# Игнорировать папку bin и obj (временные и выходные файлы сборки)
+bin/
+obj/
+
+# Игнорировать файлы конфигурации Visual Studio
+.vscode/
+.vs/
+*_sln.docstates
+
+# Игнорировать папки с кешем NuGet
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Игнорировать пользовательские файлы и настройки
+.vscode/
+.vssettings
+*.suo
+*.user
+*.sln.docstates
