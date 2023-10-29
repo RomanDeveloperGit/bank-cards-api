@@ -1,5 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-
 namespace BankCardsApi.Models
 {
   public class Card
