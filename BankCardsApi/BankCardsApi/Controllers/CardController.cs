@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankCardsApi.Data;
 using BankCardsApi.Models;
+using BankCardsApi.Controllers.Dto;
 
 namespace BankCardsApi.Controllers
 {
@@ -19,10 +20,19 @@ namespace BankCardsApi.Controllers
     {
       _context = context;
     }
-
+    
     [HttpPost]
-    public async Task<ActionResult<Card>> CreateCard([FromBody] Card card)
+    public async Task<ActionResult<Card>> CreateCard([FromBody] CreateCardDto dto)
     {
+      var card = new Card
+      {
+        Number = dto.Number,
+        CVV = dto.CVV,
+        ExpirationDate = DateTime.UtcNow.AddYears(3),
+        OwnerFirstName = dto.OwnerFirstName,
+        OwnerLastName = dto.OwnerLastName
+      };
+
       _context.Cards.Add(card);
       await _context.SaveChangesAsync();
 
@@ -42,8 +52,8 @@ namespace BankCardsApi.Controllers
       return Ok(cards);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<Card>> GetCardById([FromQuery] int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Card>> GetCardById(int id)
     {
       var card = await _context.Cards.FindAsync(id);
 
@@ -56,9 +66,9 @@ namespace BankCardsApi.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<Card>> GetCardByNumber([FromQuery] string number)
+    public async Task<ActionResult<Card>> GetCardByNumber([FromQuery] GetCardByNumberDto dto)
     {
-      var card = await _context.Cards.FirstOrDefaultAsync(c => c.Number == number);
+      var card = await _context.Cards.FirstOrDefaultAsync(c => c.Number == dto.Number);
 
       if (card == null)
       {
@@ -69,10 +79,10 @@ namespace BankCardsApi.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Card>>> GetCardsByOwner([FromQuery] string firstName, [FromQuery] string lastName)
+    public async Task<ActionResult<IEnumerable<Card>>> GetCardsByOwner([FromQuery] GetCardsByOwnerDto dto)
     {
       var cards = await _context.Cards
-          .Where(c => c.OwnerFirstName == firstName && c.OwnerLastName == lastName)
+          .Where(c => c.OwnerFirstName == dto.OwnerFirstName && c.OwnerLastName == dto.OwnerLastName)
           .ToListAsync();
 
       if (cards == null || !cards.Any())
@@ -101,8 +111,8 @@ namespace BankCardsApi.Controllers
       return NoContent();
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteCard([FromQuery] int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCard(int id)
     {
       var card = await _context.Cards.FindAsync(id);
 
